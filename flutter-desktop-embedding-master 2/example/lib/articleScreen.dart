@@ -21,16 +21,16 @@ Future<List<Article>> fetchArticleBySource(String source) async {
   }
 }
 
-class SourceScreen extends StatefulWidget {
+class ArticleScreen extends StatefulWidget {
   final Source source;
 
-  SourceScreen({Key key, @required this.source}) : super(key: key);
+  ArticleScreen({Key key, @required this.source}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => SourceScreenState();
+  State<StatefulWidget> createState() => ArticleScreenState();
 }
 
-class SourceScreenState extends State<SourceScreen> {
+class ArticleScreenState extends State<ArticleScreen> {
   var list_articles;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
@@ -41,8 +41,118 @@ class SourceScreenState extends State<SourceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
+    return MaterialApp(
+        title: 'EDMT NEWS',
+        theme: ThemeData(primarySwatch: Colors.teal),
+        home: Scaffold(
+            appBar: AppBar(
+              title: Text('EDMT News'),
+            ),
+            body: Center(
+              child: RefreshIndicator(
+                  key: refreshKey,
+                  child: FutureBuilder<List<Article>>(
+                    future: list_articles,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        List<Article> articles = snapshot.data;
+                        return ListView(
+                            children: articles
+                                .map((article) => GestureDetector(
+                                      onTap: () {},
+                                      child: Card(
+                                        elevation: 1.0,
+                                        color: Colors.white,
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 8.0, horizontal: 8.0),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 20.0,
+                                                      horizontal: 4.0),
+                                              width: 100.0,
+                                              height: 100.0,
+                                              child: article.urlToImage != null
+                                                  ? Image.network(
+                                                      article.urlToImage)
+                                                  : Image.asset(
+                                                      "assets/news.png"),
+                                            ),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Expanded(
+                                                        child: Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 8.0,
+                                                                  top: 20.0,
+                                                                  bottom: 10.0),
+                                                          child: Text(
+                                                            '${article.title}',
+                                                            style: TextStyle(
+                                                                fontSize: 18.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 8.0),
+                                                    child: Text(
+                                                      '${article.description}',
+                                                      style: TextStyle(
+                                                          fontSize: 10.0,
+                                                          color: Colors.grey,
+                                                          fontWeight: FontWeight
+                                                              .normal),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 8.0,
+                                                            top: 10.0,
+                                                            bottom: 10.0),
+                                                    child: Text(
+                                                      'Published At: ${article.publishedAt}',
+                                                      style: TextStyle(
+                                                          fontSize: 10.0,
+                                                          color: Colors.black38,
+                                                          fontWeight: FontWeight
+                                                              .normal),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ))
+                                .toList());
+                      }
+                      return CircularProgressIndicator();
+                    },
+                  ),
+                  onRefresh: refreshListArticle),
+            )));
   }
 
   Future<dynamic> refreshListArticle() async {

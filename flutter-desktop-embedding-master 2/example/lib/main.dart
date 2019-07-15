@@ -14,6 +14,7 @@
 
 import 'dart:convert';
 
+import 'articleScreen.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
@@ -82,6 +83,7 @@ class SourceScreenState extends State<SourceScreen> {
                     children: sources.map((source) => GestureDetector(
                     onTap: () {
                         //hanlde click -> navigator to details page
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleScreen(source: source)));
                     },
                     child: Card(
                       elevation: 1.0,
