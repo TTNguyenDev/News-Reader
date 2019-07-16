@@ -1,13 +1,15 @@
 import 'dart:convert';
 
+import 'package:example_flutter/DemoWebView.dart';
 import 'package:example_flutter/main.dart';
+import 'package:example_flutter/webView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'Model/model.dart';
-
-final String APIkey = "4fcd380d9925497ab01b40350b4f7d7d";
+import 'const.dart';
 
 Future<List<Article>> fetchArticleBySource(String source) async {
   final response = await http.get(
@@ -46,7 +48,15 @@ class ArticleScreenState extends State<ArticleScreen> {
         theme: ThemeData(primarySwatch: Colors.teal),
         home: Scaffold(
             appBar: AppBar(
-              title: Text('EDMT News'),
+              title: Text('${widget.source.name}'),
+              actions: <Widget>[
+                new IconButton(
+                  icon: new Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                )
+              ],
             ),
             body: Center(
               child: RefreshIndicator(
@@ -61,7 +71,11 @@ class ArticleScreenState extends State<ArticleScreen> {
                         return ListView(
                             children: articles
                                 .map((article) => GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        //Demo webView
+                                        Navigator.push(context, new MaterialPageRoute(builder: (context) => new DemoWebView()));
+                                        // Navigator.push(context, new MaterialPageRoute(builder: (context) => new WikipediaExplorer()));
+                                      },
                                       child: Card(
                                         elevation: 1.0,
                                         color: Colors.white,

@@ -23,7 +23,7 @@ import 'package:http/http.dart' as http;
 
 import 'Model/model.dart';
 
-final String APIkey = "4fcd380d9925497ab01b40350b4f7d7d";
+import 'const.dart';
 
 Future<List<Source>> fetchNewsSource() async {
   final response =
@@ -83,7 +83,7 @@ class SourceScreenState extends State<SourceScreen> {
                     children: sources.map((source) => GestureDetector(
                     onTap: () {
                         //hanlde click -> navigator to details page
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ArticleScreen(source: source)));
+                        Navigator.push(context, new MaterialPageRoute(builder: (context) => new ArticleScreen(source: source)));
                     },
                     child: Card(
                       elevation: 1.0,
